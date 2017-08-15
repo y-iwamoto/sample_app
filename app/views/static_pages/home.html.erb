@@ -28,6 +28,10 @@
 
     <%= link_to "Sign up now!", new_user_registration_path,
                                 class: "btn btn-lg btn-primary" %>
+    <%= link_to "FaceBook Login", user_omniauth_authorize_path(:facebook),
+                                class: "btn btn-lg btn-primary" %>
+    <%= link_to "Twitter Login", user_omniauth_authorize_path(:twitter),
+                                class: "btn btn-lg btn-primary" %>
   </div>
 
   <%= link_to image_tag("rails.png", alt: "Rails"), 'http://rubyonrails.org/' %>

@@ -1,6 +1,8 @@
 SampleApp2::Application.routes.draw do
+
   devise_for :users, :controllers => {
-    :registrations => "registrations"
+    :registrations => "registrations",
+    :omniauth_callbacks => "users/omniauth_callbacks"
   }
   resources :users, only: [:show, :index, :destroy] do
     member do

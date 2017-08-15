@@ -9,7 +9,7 @@ class User < ActiveRecord::Base
                                      dependent:   :destroy
   has_many :followers, through: :reverse_relationships, source: :follower
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable
+         :recoverable, :rememberable, :trackable, :validatable, :omniauthable
   validates :name, presence:true, length:{maximum: 50}  
   def feed
     Micropost.from_users_followed_by(self)
@@ -23,5 +23,26 @@ class User < ActiveRecord::Base
   end
   def unfollow!(other_user)
     relationships.find_by(followed_id: other_user.id).destroy
+  end
+  
+  def self.find_for_oauth(auth)
+    user = User.where(uid: auth.uid, provider: auth.provider).first
+
+    unless user
+      user = User.create(
+        uid:      auth.uid,
+        provider: auth.provider,
+        email:    User.dummy_email(auth),
+        password: Devise.friendly_token[0, 20]
+      )
+    end
+
+    user
+  end
+
+  private
+
+  def self.dummy_email(auth)
+    "#{auth.uid}-#{auth.provider}@example.com"
   end
 end
